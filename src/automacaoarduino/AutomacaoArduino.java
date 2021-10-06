@@ -8,7 +8,7 @@ import conexaoArduino.conexaoArduino;
  */
 public class AutomacaoArduino {
 
-    conexaoArduino con = new conexaoArduino("123");
+    conexaoArduino con = new conexaoArduino("COM4");
     public static void main(String[] args) {
        
     }
