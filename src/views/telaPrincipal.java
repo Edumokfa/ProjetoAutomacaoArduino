@@ -17,7 +17,7 @@ public class telaPrincipal extends javax.swing.JFrame {
      * Creates new form telaPrincipal
      */
     
-        conexaoArduino con = new conexaoArduino("COM4");
+        conexaoArduino con = new conexaoArduino("COM3");
         String entradaArduino = "";
     
     public telaPrincipal() {
@@ -169,7 +169,8 @@ public class telaPrincipal extends javax.swing.JFrame {
 
     private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
         porcentagem.setText(jSlider1.getValue() + "%");
-        
+        con.send(String.valueOf(jSlider1.getValue()));
+        System.out.println(jSlider1.getValue());
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void jSlider1AncestorMoved(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jSlider1AncestorMoved
