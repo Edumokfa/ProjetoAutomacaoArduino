@@ -44,7 +44,7 @@ void setup()
 void loop()
 {
   for(int i = 0; i < 10000; i++){
-    valorSensorAuxiliar = (analogRead(pinoSensor) -511.5);
+    valorSensorAuxiliar = (analogRead(portaSensor) - 511.5);
     recebidoSensor += pow(valorSensorAuxiliar, 2);
     delay(1);
   }
@@ -59,8 +59,8 @@ void loop()
 
   potencia = corrente * tensao;
 
-  Serial.print("Corrente: " + corrente + "A");
-  Serial.print("Potência: " + potencia + "Watts);
+  Serial.print(corrente);
+  Serial.print(potencia);
 
   delay(100);
   
