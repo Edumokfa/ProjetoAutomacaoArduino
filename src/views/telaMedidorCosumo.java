@@ -5,14 +5,13 @@
  */
 package views;
 
-import conexaoArduino.conexaoArduino;
+import automacaoarduino.conexaoPort;
 
 /**
  *
  * @author juanw
  */
-public class telaMedidorCosumo extends javax.swing.JFrame {
-    conexaoArduino con = new conexaoArduino("COM3");
+public class telaMedidorCosumo extends javax.swing.JFrame implements conexaoPort{
     String corrente = "";
     String tensao = "";
     /**

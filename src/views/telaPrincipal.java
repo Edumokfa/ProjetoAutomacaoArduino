@@ -5,21 +5,18 @@
  */
 package views;
 
-import conexaoArduino.conexaoArduino;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import automacaoarduino.conexaoPort;
 
 /**
  *
  * @author Eduardo
  */
-public class telaPrincipal extends javax.swing.JFrame {
+public class telaPrincipal extends javax.swing.JFrame implements conexaoPort {
 
     /**
      * Creates new form telaPrincipal
      */
     
-        conexaoArduino con = new conexaoArduino("COM3");
         String entradaArduino = "";
         Integer varAux = 0;
     
