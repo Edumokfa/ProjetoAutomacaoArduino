@@ -65,18 +65,22 @@ void loop()
   delay(100);
   
   estadoBotao = digitalRead(portaBotao);
-  if(Serial.available() > 0){
-  recebeJava = Serial.read();
-  Serial.print(recebeJava);
-  }
+  char recebeJava = Serial.read();
   if(recebeJava == 'L'){
       digitalWrite(porta_led, HIGH);
   }
   if(recebeJava == 'D'){
       digitalWrite(porta_led, LOW);
   }
-  intensidadeLed = map(recebeJava, 0, 1023, 0, 255); 
-  analogWrite(porta_led,intensidadeLed);
+  if(recebeJava == 'B'){
+    analogWrite(porta_led,25);
+  }
+  if(recebeJava == 'M'){
+    analogWrite(porta_led,127);
+  }
+  if(recebeJava == 'A'){
+    analogWrite(porta_led,255);
+  }
   
   
   if (receptor.decode(&valorSaida)) {
