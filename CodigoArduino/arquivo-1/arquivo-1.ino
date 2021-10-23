@@ -1,5 +1,18 @@
 #include <IRremote.h>
 
+//Variaveis medidor de consumo
+int portaSensor = A0;
+float recebidoSensor = 0;
+float valorSensorAuxiliar = 0;
+float corrente = 0;
+float voltsUnidade = 0.004887586;
+float potencia = 0;
+
+float sensibilidade = 0.066;//De acordo com o datasheet do sensor
+int tensao = 220;
+
+
+//Variavis cotrole luzes
 int porta_led = 9;
 int porta_led2 = 4;
 
@@ -21,6 +34,7 @@ void setup()
   pinMode(porta_led, OUTPUT);
   pinMode(porta_led2, OUTPUT);
   pinMode(portaBotao, INPUT);
+  pinMode(portaSensor, INPUT);
   
   receptor.enableIRIn(); //Inicia o receptor
   
@@ -29,6 +43,27 @@ void setup()
  
 void loop()
 {
+  for(int i = 0; i < 10000; i++){
+    valorSensorAuxiliar = (analogRead(pinoSensor) -511.5);
+    recebidoSensor += pow(valorSensorAuxiliar, 2);
+    delay(1);
+  }
+
+  recebidoSensor = ((sqrt(recebidoSensor/1000)) * voltsUnidade);
+  corrente = (recebidoSensor/sensibilidade);
+
+  //RUIDOS, verificar de acordo com o sensor
+  if(corrente <= 0.098){
+    corrente = 0;
+  }
+
+  potencia = corrente * tensao;
+
+  Serial.print("Corrente: " + corrente + "A");
+  Serial.print("Potência: " + potencia + "Watts);
+
+  delay(100);
+  
   estadoBotao = digitalRead(portaBotao);
   if(Serial.available() > 0){
   recebeJava = Serial.read();
