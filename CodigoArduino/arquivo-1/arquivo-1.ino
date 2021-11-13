@@ -43,26 +43,8 @@ void setup()
  
 void loop()
 {
-  for(int i = 0; i < 10000; i++){
-    valorSensorAuxiliar = (analogRead(portaSensor) - 511.5);
-    recebidoSensor += pow(valorSensorAuxiliar, 2);
-    delay(1);
-  }
 
-  recebidoSensor = ((sqrt(recebidoSensor/1000)) * voltsUnidade);
-  corrente = (recebidoSensor/sensibilidade);
-
-  //RUIDOS, verificar de acordo com o sensor
-  if(corrente <= 0.098){
-    corrente = 0;
-  }
-
-  potencia = corrente * tensao;
-
-  Serial.print(corrente);
-  Serial.print(potencia);
-
-  delay(100);
+  
   
   estadoBotao = digitalRead(portaBotao);
   char recebeJava = Serial.read();
@@ -80,6 +62,28 @@ void loop()
   }
   if(recebeJava == 'A'){
     analogWrite(porta_led,255);
+  }
+  if(recebeJava == 'S'){
+
+      valorSensorAuxiliar = (analogRead(portaSensor) - 511.5);
+      recebidoSensor += pow(valorSensorAuxiliar, 2);
+      delay(1);
+    
+
+  recebidoSensor = ((sqrt(recebidoSensor/1000)) * voltsUnidade);
+  corrente = (recebidoSensor/sensibilidade);
+
+  //RUIDOS, verificar de acordo com o sensor
+  if(corrente <= 0.098){
+    corrente = 0;
+  }
+
+  potencia = corrente * tensao;
+
+  Serial.print("C " +String(corrente) + " ");
+  Serial.print("T " +String(potencia) + " ");
+
+  delay(100);
   }
   
   

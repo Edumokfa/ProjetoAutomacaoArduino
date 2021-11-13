@@ -7,7 +7,6 @@ package views;
 
 import automacaoarduino.conexaoPort;
 
-
 /**
  *
  * @author Eduardo
@@ -17,10 +16,9 @@ public class telaPrincipal extends javax.swing.JFrame implements conexaoPort {
     /**
      * Creates new form telaPrincipal
      */
-    
-        String entradaArduino = "";
-        Integer varAux = 0;
-    
+    String entradaArduino = "";
+    Integer varAux = 0;
+
     public telaPrincipal() {
         initComponents();
         con.initialize();
@@ -109,8 +107,7 @@ public class telaPrincipal extends javax.swing.JFrame implements conexaoPort {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton7))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -170,6 +167,7 @@ public class telaPrincipal extends javax.swing.JFrame implements conexaoPort {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         con.send("L");
+        System.out.println("LIGOU");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -177,8 +175,8 @@ public class telaPrincipal extends javax.swing.JFrame implements conexaoPort {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-       entradaArduino = con.read();
-       jLabel2.setText(entradaArduino);
+        entradaArduino = con.read();
+        jLabel2.setText(entradaArduino);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
