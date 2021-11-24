@@ -2,19 +2,20 @@
 
 //Variaveis medidor de consumo
 int portaSensor = A0;
-float recebidoSensor = 0;
-float valorSensorAuxiliar = 0;
-float corrente = 0;
-float voltsUnidade = 0.004887586;
+float voltsporUnidade = 0.004887586;
 float potencia = 0;
+int sensorValueAux = 0;
+float valorSensor = 0;
+float valorCorrente = 0;
 
 float sensibilidade = 0.066;//De acordo com o datasheet do sensor
-int tensao = 220;
+int tensao = 242;
 
 
 //Variavis cotrole luzes
 int porta_led = 9;
 int porta_led2 = 4;
+int portaRele = 8;
 
 //Armazena o estado do rele - 0 (LOW) ou 1 (HIGH)
 int estadorele1 = 1;
@@ -35,8 +36,9 @@ void setup()
   pinMode(porta_led2, OUTPUT);
   pinMode(portaBotao, INPUT);
   pinMode(portaSensor, INPUT);
-  
+  pinMode(portaRele, OUTPUT);
   receptor.enableIRIn(); //Inicia o receptor
+  //IrReceiver.begin(receptor_infra, ENABLE_LED_FEEDBACK);
   
   Serial.begin(9600);
 }
@@ -49,10 +51,10 @@ void loop()
   estadoBotao = digitalRead(portaBotao);
   char recebeJava = Serial.read();
   if(recebeJava == 'L'){
-      digitalWrite(porta_led, HIGH);
+     digitalWrite(portaRele,HIGH);
   }
   if(recebeJava == 'D'){
-      digitalWrite(porta_led, LOW);
+      digitalWrite(portaRele,LOW);
   }
   if(recebeJava == 'B'){
     analogWrite(porta_led,25);
@@ -64,28 +66,40 @@ void loop()
     analogWrite(porta_led,255);
   }
   if(recebeJava == 'S'){
-
-      valorSensorAuxiliar = (analogRead(portaSensor) - 511.5);
-      recebidoSensor += pow(valorSensorAuxiliar, 2);
-      delay(1);
-    
-
-  recebidoSensor = ((sqrt(recebidoSensor/1000)) * voltsUnidade);
-  corrente = (recebidoSensor/sensibilidade);
-
-  //RUIDOS, verificar de acordo com o sensor
-  if(corrente <= 0.098){
-    corrente = 0;
+    for(int i=10000; i>0; i--){
+    /* Leitura do  sensor analogico A0  subtraindo o ajuste 
+     *  pela metade da resolução (1023)vcc/2 */
+    sensorValueAux = (analogRead(portaSensor) -511.5); 
+    // Soma dos quadrados das leituras
+    valorSensor += pow(sensorValueAux,2); 
+    //Delay para evitar overflow
+    //delay(1);
   }
 
-  potencia = corrente * tensao;
+  // Calculo da média dos quadrados e conversão para Volts
+  valorSensor = (sqrt(valorSensor/ 10000)) * voltsporUnidade; 
+  // Calculo da corrente considerando a sensibilidade do sensor (185 mV por ampere) para o sensor de exemplo
+  valorCorrente = (valorSensor/sensibilidade); 
 
-  Serial.print("C " +String(corrente) + " ");
-  Serial.print("T " +String(potencia) + " ");
-
-  delay(100);
+  /*Tratamento para possivel ruido
+  O ACS712 de 30 Amperes é projetado para fazer leituras
+   de valores altos acima de 0.25 Amperes até 30,
+   por isso é normal ocorrer ruidos de até 0.20A */
+  if(valorCorrente <= 0.25){
+    valorCorrente = 0; 
   }
+
+  valorSensor =0;
   
+  //Mostra o valor da corrente
+  Serial.print(valorCorrente, 3);
+
+  //Calculo da Potência 
+  Serial.print(":");
+  Serial.print(valorCorrente * tensao);
+  //Delay para evitar overflow
+  //delay(100);
+  }
   
   if (receptor.decode(&valorSaida)) {
    

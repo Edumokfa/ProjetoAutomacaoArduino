@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author juanw
+ * @author Pedro.S
  */
 public class telaMedidorCosumo extends javax.swing.JFrame implements conexaoPort {
 
@@ -24,39 +24,29 @@ public class telaMedidorCosumo extends javax.swing.JFrame implements conexaoPort
         initComponents();
     }
 
-    public void lerDados() {
+    public void lerDados(){
         conexao.initialize();
+        conexao.send("S");
         new Thread() {
             @Override
             public void run() {
                 while (iniciaLeitura) {
-                    conexao.send("S");
-                    System.out.println("ENVIOU S");
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(telaMedidorCosumo.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+
                     String entrada = conexao.read();
+                    if(entrada != null){
                     System.out.println("LEU:"+entrada);
+                    }
                     String[] arrayEntrada = null;
                     if (entrada != null) {
-                        arrayEntrada = entrada.split(" ");
+                        arrayEntrada = entrada.split(":");
                     }
-                    if (arrayEntrada != null && arrayEntrada[0].equals("C")) {
-                        corrente = arrayEntrada[1];
-                    } else if (arrayEntrada != null && arrayEntrada[2].equals("T")) {
-                        tensao = arrayEntrada[3];
+                    if (arrayEntrada != null && arrayEntrada[0] != null) {
+                        corrente = arrayEntrada[0];
+                    } else if (arrayEntrada != null && arrayEntrada[1] != null) {
+                        tensao = arrayEntrada[1];
                     }
-
                     correnteMostrar.setText(corrente);
                     tensaoMostrar.setText(tensao);
-
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(telaMedidorCosumo.class.getName()).log(Level.SEVERE, null, ex);
-                    }
                 }
             }
         }.start();

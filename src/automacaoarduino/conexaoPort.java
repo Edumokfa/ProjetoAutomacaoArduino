@@ -13,4 +13,7 @@ import conexaoArduino.conexaoArduino;
  */
 public interface conexaoPort {
     static conexaoArduino con = new conexaoArduino("COM3");
+    boolean iniciado = false;
+    
+    
 }
