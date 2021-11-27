@@ -15,11 +15,11 @@ import java.util.TooManyListenersException;
 
 /**
  * <b>Site: www.descompila.com</b>
- * 
+ *
  * <b>Email: samuelson@descompila.com</b>
- * 
+ *
  * @author Samuelson Brito
- * 
+ *
  * @version 1.0
  */
 public class conexaoArduino implements SerialPortEventListener {
@@ -43,7 +43,7 @@ public class conexaoArduino implements SerialPortEventListener {
     /**
      * Milliseconds to block while waiting for port open
      */
-    private static final int TIME_OUT = 2000;
+    private static final int TIME_OUT = 15000;
     /**
      * Default bits per second for COM port.
      */

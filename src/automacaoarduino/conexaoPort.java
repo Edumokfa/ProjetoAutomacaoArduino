@@ -12,8 +12,6 @@ import conexaoArduino.conexaoArduino;
  * @author juanw
  */
 public interface conexaoPort {
-    static conexaoArduino con = new conexaoArduino("COM3");
+    static conexaoArduino con = new conexaoArduino("COM4");
     boolean iniciado = false;
-    
-    
 }

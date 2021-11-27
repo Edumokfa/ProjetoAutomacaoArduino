@@ -45,8 +45,6 @@ void setup()
  
 void loop()
 {
-
-  
   
   estadoBotao = digitalRead(portaBotao);
   char recebeJava = Serial.read();
@@ -66,18 +64,17 @@ void loop()
     analogWrite(porta_led,255);
   }
   if(recebeJava == 'S'){
-    for(int i=10000; i>0; i--){
+    for(int i=5000; i>0; i--){
     /* Leitura do  sensor analogico A0  subtraindo o ajuste 
      *  pela metade da resolução (1023)vcc/2 */
     sensorValueAux = (analogRead(portaSensor) -511.5); 
     // Soma dos quadrados das leituras
     valorSensor += pow(sensorValueAux,2); 
-    //Delay para evitar overflow
-    //delay(1);
+
   }
 
   // Calculo da média dos quadrados e conversão para Volts
-  valorSensor = (sqrt(valorSensor/ 10000)) * voltsporUnidade; 
+  valorSensor = (sqrt(valorSensor/ 5000)) * voltsporUnidade; 
   // Calculo da corrente considerando a sensibilidade do sensor (185 mV por ampere) para o sensor de exemplo
   valorCorrente = (valorSensor/sensibilidade); 
 
@@ -89,31 +86,24 @@ void loop()
     valorCorrente = 0; 
   }
 
-  valorSensor =0;
+  valorSensor = 0;
+
+  potencia = valorCorrente * tensao;
   
   //Mostra o valor da corrente
-  Serial.print(valorCorrente, 3);
-
-  //Calculo da Potência 
-  Serial.print(":");
-  Serial.print(valorCorrente * tensao);
+  Serial.println((String)valorCorrente+":" +(String) potencia);
   //Delay para evitar overflow
-  //delay(100);
+  //  delay(1000);
   }
   
   if (receptor.decode(&valorSaida)) {
-   
     receptor.resume();
     Serial.println(valorSaida.value);
     if(valorSaida.value == 1077952703){
        Serial.println(valorSaida.value);
-      digitalWrite(porta_led, HIGH);
-      digitalWrite(porta_led2, LOW);
     }else if(valorSaida.value == 4294967295){
        Serial.println(valorSaida.value);
-      digitalWrite(porta_led, LOW);
-      digitalWrite(porta_led2, HIGH);
     }
   }
-  
+//  delay(500);
 }

@@ -2,7 +2,6 @@ package views;
 
 import automacaoarduino.conexaoPort;
 import static automacaoarduino.conexaoPort.con;
-import conexaoArduino.conexaoArduino;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,8 +13,7 @@ public class telaMedidorCosumo extends javax.swing.JFrame implements conexaoPort
 
     String corrente = "";
     String tensao = "";
-    boolean iniciaLeitura = false;
-    conexaoArduino conexao = con;
+    boolean iniciaLeitura = true;
 
     /**
      * Creates new form telaMedidorCosumo
@@ -24,33 +22,36 @@ public class telaMedidorCosumo extends javax.swing.JFrame implements conexaoPort
         initComponents();
     }
 
-    public void lerDados(){
-        conexao.initialize();
-        conexao.send("S");
+    public void lerDados() {
         new Thread() {
             @Override
             public void run() {
                 while (iniciaLeitura) {
-
-                    String entrada = conexao.read();
-                    if(entrada != null){
-                    System.out.println("LEU:"+entrada);
+                     con.send("S");
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(telaMedidorCosumo.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    String entrada = con.read();
+                    if (entrada != null) {
+                        if (entrada.contains(":")) {
+                            System.out.println("LEU:" + entrada);
+                        }
                     }
                     String[] arrayEntrada = null;
                     if (entrada != null) {
                         arrayEntrada = entrada.split(":");
                     }
-                    if (arrayEntrada != null && arrayEntrada[0] != null) {
-                        corrente = arrayEntrada[0];
-                    } else if (arrayEntrada != null && arrayEntrada[1] != null) {
-                        tensao = arrayEntrada[1];
+                    if (entrada.contains(":") && arrayEntrada != null && arrayEntrada[0] != null && arrayEntrada[1] != null) {
+                        corrente = arrayEntrada[0] + "Ampera(hora)";
+                        tensao = arrayEntrada[1] + "Watts(hora)";
                     }
                     correnteMostrar.setText(corrente);
                     tensaoMostrar.setText(tensao);
                 }
             }
         }.start();
-
     }
 
     /**
@@ -71,6 +72,7 @@ public class telaMedidorCosumo extends javax.swing.JFrame implements conexaoPort
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Medir Consumo");
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel1.setText("Corrente:");
@@ -104,26 +106,27 @@ public class telaMedidorCosumo extends javax.swing.JFrame implements conexaoPort
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(345, Short.MAX_VALUE)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton3)
-                        .addGap(89, 89, 89)
-                        .addComponent(jButton1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(correnteMostrar, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                            .addComponent(correnteMostrar, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(tensaoMostrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
+                                .addGap(0, 139, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(tensaoMostrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap())))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,13 +152,10 @@ public class telaMedidorCosumo extends javax.swing.JFrame implements conexaoPort
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        telaPrincipal tela = new telaPrincipal();
-        tela.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        iniciaLeitura = true;
         lerDados();
     }//GEN-LAST:event_jButton2ActionPerformed
 
